@@ -27,29 +27,19 @@ interface UnsplashResponse {
   total_pages: number;
 }
 
-interface UnsplashApiResponse {
-  data: {
-    results: UnsplashPhoto[];
-    total_pages: number;
-  };
-}
-
 export const getPhotos = async (
   query: string,
   page: number
 ): Promise<UnsplashResponse> => {
   try {
-    const response: UnsplashApiResponse = await axios.get(`/search/photos`, {
+    const response = await axios.get<UnsplashResponse>(`/search/photos`, {
       params: {
         query: query,
         page: page,
       },
     });
-    const total_pages: number = response.data.total_pages;
-    return {
-      results: response.data.results,
-      total_pages: total_pages,
-    };
+
+    return response.data;
   } catch (error) {
     console.log("Error");
     throw error;
